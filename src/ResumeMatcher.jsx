@@ -19,12 +19,12 @@ const TRACK_HEX = { SAVED:"#a5b4fc", APPLIED:"#fde68a", INTERVIEW:"#6ee7b7", OFF
 
 // ─── AI HELPER ──────────────────────────────────────────────────────────────
 const AI = async (prompt, max = 1600) => {
-  const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDLNQTzDomkc7XvnB0FH1ZIxYye1SZiYDI", {
+  const r = await fetch("https://api.anthropic.com/v1/messages", {
     method:"POST", headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({ contents:[{parts:[{text:prompt}]}] })
+    body: JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:1600, messages:[{role:"user",content:prompt}] })
   });
   const d = await r.json();
-  return d.candidates?.[0]?.content?.parts?.[0]?.text || "";
+  return d.content?.find(b=>b.type==="text")?.text || "";
 };
 const tryJSON = t => { try { return JSON.parse(t.replace(/```json\s*|```/g,"").trim()); } catch { return null; } };
 
