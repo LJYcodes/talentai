@@ -19,12 +19,12 @@ const TRACK_HEX = { SAVED:"#a5b4fc", APPLIED:"#fde68a", INTERVIEW:"#6ee7b7", OFF
 
 // ─── AI HELPER ──────────────────────────────────────────────────────────────
 const AI = async (prompt, max = 1600) => {
-  const r = await fetch("https://api.anthropic.com/v1/messages", {
-    method:"POST", headers:{"Content-Type":"application/json","x-api-key":import.meta.env.VITE_ANTHROPIC_API_KEY,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-    body: JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:max, messages:[{role:"user",content:prompt}] })
+  const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDLNQTzDomkc7XvnB0FH1ZIxYye1SZiYDI", {
+    method:"POST", headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({ contents:[{parts:[{text:prompt}]}] })
   });
   const d = await r.json();
-  return d.content?.find(b=>b.type==="text")?.text || "";
+  return d.candidates?.[0]?.content?.parts?.[0]?.text || "";
 };
 const tryJSON = t => { try { return JSON.parse(t.replace(/```json\s*|```/g,"").trim()); } catch { return null; } };
 
